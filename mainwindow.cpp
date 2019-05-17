@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -33,7 +34,7 @@ void MainWindow::on_pushButton_2_clicked()
     qDebug() << "Send data...";
     for(QString fn: files){
         QString to_write = ui->lineEdit->text();
-        Worker *task = new Worker(fn, to_write, ui->ipAddrEdit->toPlainText(), ui->plainTextEdit_2->toPlainText().toUShort());
+        Worker *task = new Worker(this, fn, to_write, ui->ipAddrEdit->toPlainText(), ui->plainTextEdit_2->toPlainText().toUShort());
         task->setAutoDelete(true);
         pool->start(task);
     }
@@ -44,3 +45,6 @@ void MainWindow::onUpdate(){
     ui->thread_lbl->setText(QString::number(works));
 }
 
+void MainWindow::onWarn(const QString w){
+    QMessageBox::warning(this, "Error:", w);
+}

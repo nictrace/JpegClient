@@ -10,14 +10,14 @@
 #include <QMessageBox>
 #include <windows.h>
 
-Worker::Worker(QString fname, QString text, QString addr, quint16 port, quint32 delay)
+Worker::Worker(QObject *parent, QString fname, QString text, QString addr, quint16 port, quint32 delay)
 {
     this->name = fname;
     this->ddtext = text;
     this->addr = addr;
     this->port = port;
     this->delay = delay;
-
+    connect(this, SIGNAL(showError(QString)), parent, SLOT(onWarn(QString)));
 
 }
 
@@ -36,7 +36,8 @@ void Worker::run(){
     while(!trySend(s, addr, port)){
         QThread::msleep(delay);   //wait delay ms before new try
         if(s.error() == QAbstractSocket::ConnectionRefusedError){
-            MessageBox(nullptr, L"Connect error, please check server!", L"Error", MB_OK|MB_ICONHAND);
+            emit(showError("Connect error, please check server!"));
+            //MessageBox(nullptr, L"Connect error, please check server!", L"Error", MB_OK|MB_ICONHAND);
             return;
         }
     }
