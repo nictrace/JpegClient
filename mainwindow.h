@@ -30,9 +30,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QThreadPool *pool;
     QStringList files;
-    QTimer *timer;
+    QScopedPointer<QThreadPool> pool;
+    QScopedPointer<QTimer> timer;
 };
 
 #endif // MAINWINDOW_H

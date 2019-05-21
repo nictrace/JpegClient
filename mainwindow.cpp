@@ -5,11 +5,11 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    pool = new QThreadPool(this);
+    pool.reset(new QThreadPool(this));
     pool->setMaxThreadCount(10);
-    timer = new QTimer(this);
-          connect(timer, SIGNAL(timeout()), this, SLOT(onUpdate()));
-          timer->start(500);
+    timer.reset(new QTimer(this));
+    connect(timer.get(), SIGNAL(timeout()), this, SLOT(onUpdate()));
+    timer->start(500);
 }
 
 MainWindow::~MainWindow()
